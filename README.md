@@ -4,6 +4,8 @@ PhantomPlay keeps games and apps running normally when they go to the background
 
 It is mostly useful on multi-monitor setups, where you want a game to keep going on one screen while you do something else on another.
 
+On top of the core hook, PhantomPlay can save games as auto-inject presets so they get hooked the moment they launch, ships with light and dark themes, and minimizes to the system tray to stay out of your way.
+
 ## Features
 
 * Keep a game fully active in the background, with no forced pause and no muted audio
