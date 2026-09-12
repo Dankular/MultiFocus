@@ -60,10 +60,6 @@ turned out to need more than the original single-process design:
   different titles in one session with zero manual commands after it's
   started.
 
-See `CLAUDE.md` (one level up, not part of this repo) for the full
-investigation log this was built from — what was verified by direct
-testing vs. assumed, and what's still open.
-
 ## Scope
 
 Single-player / non-competitive only. Never point this at an
