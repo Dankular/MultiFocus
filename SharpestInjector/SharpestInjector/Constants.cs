@@ -51,7 +51,6 @@ namespace SharpestInjector
         public string FileName;
         public string WindowTitle;
         public IntPtr WindowHandle;
-        public List<ChildWindow> ChildWindows;
         public uint Id;
         public Dictionary<string, ModuleInfo> Modules = new Dictionary<string, ModuleInfo>();
         public IntPtr Kernel32;

@@ -141,7 +141,6 @@ namespace SharpestInjector
 
         public readonly string FileName;
         public readonly Dictionary<string, int> Exports;
-        public IReadOnlyCollection<string> ExportNames => Exports.Keys;
 
         public bool Is64Bit = false;
 

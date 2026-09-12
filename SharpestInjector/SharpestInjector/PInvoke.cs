@@ -16,9 +16,6 @@ namespace SharpestInjector
         public static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
 
         [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-        public static extern bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flNewProtect, out uint flOldProtect);
-
-        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
         public static extern bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint dwFreeType);
 
         [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
@@ -48,9 +45,6 @@ namespace SharpestInjector
         [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
         public static extern bool IsWow64Process(IntPtr processHandle, out bool wow64Process);
 
-        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-        public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, out int lpNumberOfBytesRead);
-
         [DllImport("psapi.dll", SetLastError = true, ExactSpelling = true)]
         public static extern bool EnumProcessModulesEx(IntPtr hProcess, [Out] IntPtr lphModule, uint cb, out uint lpcbNeeded, uint dwFilterFlag);
 
@@ -59,21 +53,6 @@ namespace SharpestInjector
 
         [DllImport("psapi.dll", SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
         public static extern bool GetMappedFileNameW(IntPtr hProcess, IntPtr hFile, [Out] StringBuilder lpFilename, uint nSize);
-
-        [DllImport("user32.dll")]
-        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-
-        [DllImport("user32.Dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool EnumChildWindows(IntPtr parentHandle, Win32Callback callback, IntPtr lParam);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern int GetWindowTextLength(IntPtr hWnd);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-
-        public delegate bool Win32Callback(IntPtr hwnd, IntPtr lParam);
 
         // privileges
         public const uint PROCESS_CREATE_THREAD = 0x0002;
@@ -87,16 +66,10 @@ namespace SharpestInjector
         public const uint MEM_RESERVE = 0x2000;
         public const uint MEM_RELEASE = 0x8000;
         public const uint PAGE_READWRITE = 0x4;
-        public const uint PAGE_EXECUTE_READ = 0x20;
 
         public const uint CREATE_SUSPENDED = 0x4;
 
         public const uint LIST_MODULES_ALL = 0x03;
-
-        public const uint TH32CS_SNAPMODULE = 0x8;
-        public const uint TH32CS_SNAPMODULE32 = 0x10;
-
-        public const uint ERROR_BAD_LENGTH = 0x18;
 
         public const uint MAX_PATH = 260;
 
@@ -109,35 +82,5 @@ namespace SharpestInjector
         /// Equal to a pointer with value of -1
         /// </summary>
         public static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
-    }
-
-    public class AnsiString
-    {
-        public readonly string Parameter;
-
-        public AnsiString(string parameter)
-        {
-            Parameter = parameter;
-        }
-    }
-
-    public class AnsiChar
-    {
-        public readonly char Parameter;
-
-        public AnsiChar(char parameter)
-        {
-            Parameter = parameter;
-        }
-    }
-
-    public class PointerParam
-    {
-        public readonly object Parameter;
-
-        public PointerParam(object parameter)
-        {
-            Parameter = parameter;
-        }
     }
 }
