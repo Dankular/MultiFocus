@@ -183,6 +183,7 @@ WNDPROC OldWndProc; // Original window procedure, restored on detach
 
 static decltype(GetForegroundWindow)* real_GetForegroundWindow = GetForegroundWindow;
 static decltype(SetCursorPos)* real_SetCursorPos = SetCursorPos;
+static decltype(ClipCursor)* real_ClipCursor = ClipCursor;
 
 HWND WINAPI DetourGetForegroundWindow()
 {
@@ -198,6 +199,21 @@ BOOL WINAPI DetourSetCursorPos(int X, int Y)
 	return real_SetCursorPos(X, Y);
 }
 
+// Confirmed 2026-09-12 (GTA V): once the game stops seeing real deactivation, it also never
+// sees a reason to release a cursor clip it set while genuinely focused (RECT-confine via
+// ClipCursor is a common thing games do while active) -- so the mouse gets stuck inside the
+// game window even though the window itself correctly stops pausing. Swallowing new clip
+// requests while unfocused isn't enough on its own, since the clip from BEFORE focus was lost
+// is already in effect; NewWndProc force-releases it once on the real deactivation transition
+// (see the WM_NCACTIVATE branch below) and this detour then blocks the game reapplying one.
+BOOL WINAPI DetourClipCursor(const RECT* lpRect)
+{
+	if (unfocused) {
+		return TRUE;
+	}
+	return real_ClipCursor(lpRect);
+}
+
 
 LRESULT CALLBACK NewWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -206,6 +222,9 @@ LRESULT CALLBACK NewWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
 	}
 	else if (message == WM_NCACTIVATE && wParam == FALSE) {
 		unfocused = TRUE;
+		real_ClipCursor(nullptr); // Release any clip the game set while it was genuinely focused --
+		                          // it will never do this itself now that it doesn't see the real
+		                          // deactivation. Harmless no-op if nothing was clipped.
 		return 0; // Swallowing this deactivation message keeps the window treated as active.
 	}
 	else if (message == WM_ACTIVATE && wParam == WA_INACTIVE) {
@@ -237,6 +256,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  fdwReason, LPVOID lpReserved)
 
 			MH_CreateHookEx(GetForegroundWindow, DetourGetForegroundWindow, &real_GetForegroundWindow);
 			MH_CreateHookEx(SetCursorPos, DetourSetCursorPos, &real_SetCursorPos);
+			MH_CreateHookEx(ClipCursor, DetourClipCursor, &real_ClipCursor);
 
 			if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK) {
 				return FALSE;
