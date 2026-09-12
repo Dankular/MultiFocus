@@ -28,7 +28,9 @@ namespace PhantomPlayOrchestrator
     class Program
     {
         static string LogPath = Path.Combine(Path.GetTempPath(), "phantomplay_orchestrator.log");
-        static string DllDir = @"D:\Dev Proj\MultiFocus\PhantomPlay\PhantomPlayGUI\bin\Release";
+        // Payload DLLs land here via PhantomPlay.vcxproj's post-build step -- next to the
+        // solution, not any particular consumer project's own output folder.
+        static string DllDir = @"D:\Dev Proj\MultiFocus\PhantomPlay\Payload\Release";
         static string TargetConfigPath => Path.Combine(Path.GetTempPath(), "phantomplay_target.txt");
 
         static readonly HashSet<string> SteamHelperNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)

@@ -65,8 +65,8 @@
       <SubSystem>Windows</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist "$(SolutionDir)$(ProjectName)GUI\bin\$(ConfigurationName)\" mkdir "$(SolutionDir)$(ProjectName)GUI\bin\$(ConfigurationName)\"
-copy /y "$(TargetPath)" "$(SolutionDir)$(ProjectName)GUI\bin\$(ConfigurationName)\$(TargetName).dll"</Command>
+      <Command>if not exist "$(SolutionDir)Payload\$(ConfigurationName)\" mkdir "$(SolutionDir)Payload\$(ConfigurationName)\"
+copy /y "$(TargetPath)" "$(SolutionDir)Payload\$(ConfigurationName)\$(TargetName).dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   
